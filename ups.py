@@ -49,27 +49,40 @@ def call_api(tracking_number):
    
 
 
-
+#OPENS WORKBOOK, CALLS API, AND UPDATES WORKBOOK APPROPIRATELY
 if __name__ == '__main__':
+
+  #LOADS THE WORKBOOK AND 2 SHEETS INSIDE OF THE WORKBOOK
   wb = load_workbook(r"C:\Users\MForet\OneDrive - Alternative Behavior Strategies, LLC\UPS Tracking.xlsx")
   delivered_rows = []
   ws = wb['Tracking']
   ws2 = wb['Completed']
 
+  #LOOPS THROUGH THE ROWS THAT HAVE TRACKING INFO
   for row in range(2,get_num_rows(ws)+1):
+
+    #IF THE PACKAGE WAS PREVIOUSLY MARKED AS DELIVERED, WE COPY THE ROW AND ADD IT TO OUR DELIVERED ROWS LIST ALONG WITH THE ROW NUMBER
     if(ws['C'+str(row)].value == 'Delivered'):
       delivered_rows.append([row, copy_row(ws, row)])
 
+    #IF THE PACKAGE WAS NOT PREVIOUSLY MARKED AS DELIVERED
     else:
+
+      #CALL UPS API WHICH RETURNS A LIST WITH THE TRACKING INFO
       list = call_api(ws['A'+str(row)].value)
+
+      #IF LIST IS NOT EMPTY WE LOOP THROUGH THE LIST AND UPDATE THE EXCEL ROW
       if(list != 'fail'):
         count = 2
 
         for key in list:
           ws[get_column_letter(count)+str(row)] = list[key]
           count += 1
+
+      #IF LIST IS EMPTY, THERE WAS AN ISSUE RETREVIING DATA AND THE PROGRAM ENDS.
       else:
         print('list is empty. Failed to get data from UPS.')
+        exit(1)
 
   
   #IF THERE ARE ANY ITEMS THAT WERE MARKED AS DELIVERED LAST TIME THE SCRIPT RAN

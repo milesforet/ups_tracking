@@ -3,7 +3,7 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 import os
 
-#returns number of rows in a col. Default col is 1
+#RETURNS NUMBER OF FILLED COLUMNS IN WORKSHEET
 def get_num_rows(ws, col="A"):
     count = 1
     x=''
@@ -15,7 +15,7 @@ def get_num_rows(ws, col="A"):
 
     return count-2
 
-#returns number of cols in a row
+#RETURNS NUMBER OF FILLED COLUMNS IN WORKSHEET
 def get_num_cols(ws, row):
     count = 1
     x=''
@@ -28,7 +28,7 @@ def get_num_cols(ws, row):
     
     return count-2
 
-#returns list of row values
+#RETURNS LIST OF ROW VALUES FOR SPECIFIED ROW
 def copy_row(ws, row):
     
     array = []
@@ -39,5 +39,3 @@ def copy_row(ws, row):
         array.append(ws[char+str(row)].value)
     
     return array
-
-
